@@ -1,0 +1,9 @@
+<!doctype html><html lang='uz'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Customer panel</title><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='/styles.css'></head>
+<body><div class='top'><div class='brand'>Customer Panel</div><div id='whoami'></div></div><div class='wrap'><div class='nav'><a href='/customer'>Customer</a><a href='/chat'>Chatbot</a><a href='/profile'>Profile</a><a href='#' onclick='logout()'>Logout</a></div><div class='grid' style='margin-top:12px'>
+<div class='card full'><h3>Tashrif (visitors) log</h3><small>Social media kabi trafik kuzatuvi</small><div class='row'><input id='vName' placeholder='Ism'><input id='vSource' placeholder='source (instagram, telegram...)'></div><input id='vPage' placeholder='page'><button onclick='saveVisit()'>Tashrif yuborish</button><ul id='visitorList'></ul></div>
+</div></div><script src='/app.js'></script><script>
+guard(['customer','admin','manager']); setHeader();
+async function load(){const r=await API('/api/visitors');visitorList.innerHTML=(r.data||[]).map(v=>`<li>${v.name} / ${v.source} / ${v.page}</li>`).join('');}
+async function saveVisit(){await API('/api/visitors','POST',{name:vName.value,source:vSource.value,page:vPage.value});load();}
+load();
+</script></body></html>
