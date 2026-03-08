@@ -1,0 +1,9 @@
+<!doctype html><html lang='uz'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Manager panel</title><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='/styles.css'></head>
+<body><div class='top'><div class='brand'>Manager Panel</div><div id='whoami'></div></div><div class='wrap'><div class='nav'><a href='/manager'>Manager</a><a href='/analytics'>Analytics</a><a href='/chat'>Chatbot</a><a href='/profile'>Profile</a><a href='#' onclick='logout()'>Logout</a></div><div class='grid' style='margin-top:12px'>
+<div class='card full'><h3>Worker vazifalari boshqaruvi</h3><div class='row'><input id='title' placeholder='Task'><select id='assignee'><option value='u_worker'>Worker User</option></select></div><div class='row'><select id='status'><option>todo</option><option>in_progress</option><option>done</option></select><input id='dueDate' type='date'></div><button onclick='addTask()'>Task qo'shish</button><ul id='tasks'></ul></div>
+</div></div><script src='/app.js'></script><script>
+guard(['manager','admin']); setHeader();
+async function load(){const t=await API('/api/tasks');tasks.innerHTML=(t.data||[]).map(x=>`<li>${x.title} - <b>${x.status}</b></li>`).join('');}
+async function addTask(){await API('/api/tasks','POST',{title:title.value,assignee:assignee.value,status:status.value,dueDate:dueDate.value});load();}
+load();
+</script></body></html>

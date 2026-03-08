@@ -1,0 +1,9 @@
+{
+  "name": "ai-business-os",
+  "version": "1.0.0",
+  "description": "Role-based AI Business OS with Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

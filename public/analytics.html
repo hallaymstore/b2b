@@ -1,0 +1,16 @@
+<!doctype html><html lang='uz'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Analytics</title><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='/styles.css'></head>
+<body><div class='top'><div class='brand'>Analytics Panel</div><div id='whoami'></div></div><div class='wrap'><div class='nav'><a href='/admin'>Admin</a><a href='/manager'>Manager</a><a href='/analytics'>Analytics</a><a href='/profile'>Profile</a><a href='#' onclick='logout()'>Logout</a></div><div class='grid' style='margin-top:12px'>
+<div class='card kpi'><h4>Kunlik sof foyda</h4><p id='daily'>$0</p></div>
+<div class='card kpi'><h4>Haftalik sof foyda</h4><p id='weekly'>$0</p></div>
+<div class='card kpi'><h4>Oylik sof foyda</h4><p id='monthly'>$0</p></div>
+<div class='card kpi'><h4>Yillik sof foyda</h4><p id='yearly'>$0</p></div>
+<div class='card full'><h3>Mahsulotlar bo‘yicha hisobot (monthly)</h3><ul id='perProduct'></ul></div>
+</div></div><script src='/app.js'></script><script>
+guard(['admin','manager']); setHeader();
+async function load(){
+  const d=await API('/api/finance?period=daily');const w=await API('/api/finance?period=weekly');const m=await API('/api/finance?period=monthly');const y=await API('/api/finance?period=yearly');
+  daily.textContent='$'+d.data.netProfit;weekly.textContent='$'+w.data.netProfit;monthly.textContent='$'+m.data.netProfit;yearly.textContent='$'+y.data.netProfit;
+  perProduct.innerHTML=(m.data.byProduct||[]).map(x=>`<li>${x.name}: income $${x.income}, expense $${x.expense}, profit $${x.netProfit}</li>`).join('');
+}
+load();
+</script></body></html>

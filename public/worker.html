@@ -1,0 +1,10 @@
+<!doctype html><html lang='uz'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Worker panel</title><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='/styles.css'></head>
+<body><div class='top'><div class='brand'>Worker Panel</div><div id='whoami'></div></div><div class='wrap'><div class='nav'><a href='/worker'>Worker</a><a href='/chat'>Chatbot</a><a href='/profile'>Profile</a><a href='#' onclick='logout()'>Logout</a></div><div class='grid' style='margin-top:12px'>
+<div class='card half'><h3>Bajarilmagan ishlar</h3><ul id='pending'></ul></div>
+<div class='card half'><h3>Bajarilgan ishlar</h3><ul id='done'></ul></div>
+</div></div><script src='/app.js'></script><script>
+guard(['worker','admin','manager']); setHeader();
+async function load(){const r=await API('/api/me');const d=r.data.tasks.done||[];const p=r.data.tasks.pending||[];done.innerHTML=d.map(x=>`<li>${x.title}</li>`).join('')||'<li>Yo\'q</li>';pending.innerHTML=p.map(x=>`<li>${x.title} <button onclick="mark('${x.id}')">done</button></li>`).join('')||'<li>Yo\'q</li>';}
+async function mark(id){await API('/api/tasks/'+id,'PATCH',{status:'done'});load();}
+load();
+</script></body></html>

@@ -1,0 +1,23 @@
+<!doctype html><html lang='uz'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Admin panel</title><link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' href='https://fonts.gstatic.com' crossorigin><link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap' rel='stylesheet'><link rel='stylesheet' href='/styles.css'></head>
+<body><div class='top'><div class='brand'>Admin Panel</div><div id='whoami'></div></div><div class='wrap'><div class='nav'><a href='/admin'>Admin</a><a href='/analytics'>Analytics</a><a href='/chat'>Chatbot</a><a href='/profile'>Profile</a><a href='/manager'>Manager</a><a href='/worker'>Worker</a><a href='/customer'>Customer</a><a href='#' onclick='logout()'>Logout</a></div>
+<div class='grid' style='margin-top:12px'>
+<div class='card kpi'><h4>Haftalik foyda</h4><p id='weeklyProfit'>$0</p></div>
+<div class='card kpi'><h4>Oylik foyda</h4><p id='monthlyProfit'>$0</p></div>
+<div class='card kpi'><h4>Yillik foyda</h4><p id='yearlyProfit'>$0</p></div>
+<div class='card kpi'><h4>Tashriflar</h4><p id='visitCount'>0</p></div>
+<div class='card half'><h3>Mahsulot qo'shish</h3><div class='row'><input id='pName' placeholder='Nomi'><input id='pCategory' placeholder='Category'></div><div class='row'><input id='pPrice' type='number' placeholder='Narx'><input id='pCost' type='number' placeholder='Xarajat'></div><button onclick='addProduct()'>Saqlash</button><ul id='products'></ul></div>
+<div class='card half'><h3>Daromad / Xarajat yozish</h3><div class='row'><select id='txProduct'></select><select id='txType'><option value='income'>income</option><option value='expense'>expense</option></select></div><input id='txAmount' type='number' placeholder='Miqdor'><input id='txNote' placeholder='Izoh'><button onclick='addTx()'>Qo'shish</button><ul id='txList'></ul></div>
+</div></div>
+<script src='/app.js'></script><script>
+guard(['admin']); setHeader();
+async function load(){
+const [d,w,m,y,p,t,v]=await Promise.all([API('/api/dashboard'),API('/api/finance?period=weekly'),API('/api/finance?period=monthly'),API('/api/finance?period=yearly'),API('/api/products'),API('/api/transactions'),API('/api/visitors')]);
+weeklyProfit.textContent='$'+w.data.netProfit; monthlyProfit.textContent='$'+m.data.netProfit; yearlyProfit.textContent='$'+y.data.netProfit; visitCount.textContent=(v.data||[]).length;
+products.innerHTML=(p.data||[]).map(x=>`<li>${x.name} - $${x.price} / cost $${x.cost}</li>`).join('');
+txProduct.innerHTML=(p.data||[]).map(x=>`<option value='${x.id}'>${x.name}</option>`).join('');
+txList.innerHTML=(t.data||[]).slice(0,8).map(x=>`<li>${x.type} $${x.amount}</li>`).join('');
+}
+async function addProduct(){await API('/api/products','POST',{name:pName.value,category:pCategory.value,price:pPrice.value,cost:pCost.value});load();}
+async function addTx(){await API('/api/transactions','POST',{productId:txProduct.value,type:txType.value,amount:txAmount.value,note:txNote.value});load();}
+load();
+</script></body></html>
