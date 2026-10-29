@@ -1,0 +1,1 @@
+{"name":"prava-test-uz-premium","version":"2.0.0","private":true,"engines":{"node":">=20"},"scripts":{"start":"node server.js","test":"node --test"},"dependencies":{"mongodb":"^6.19.0"}}
